@@ -14,3 +14,5 @@ where files is an array of the names of the files in the directory excluding '.'
 const fs = require('fs');
 const files = fs.readdirSync('./');
 console.log(files);
+
+
