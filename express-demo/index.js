@@ -16,7 +16,7 @@ app.get('/books/:bookId', (req, res) => {
   res.send(req.params.bookId)
 });
 
-app.get('/courses/:id' , (req, res) => {
+app.get('/api/courses/:id' , (req, res) => {
   // look up the course by id
   var course = courses.find(c => c.id === parseInt(req.params.id));
   // validation input
@@ -51,6 +51,13 @@ res.send(course);
 
 });
 
+app.put('/api/courses/:id' , (req, res) => {
+  // look up the courses
+  // if not existing , return the courses
+  // validate the course
+  // if invalid
+  // return the update courses
+})
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
