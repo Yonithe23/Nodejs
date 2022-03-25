@@ -5,19 +5,20 @@ So, in this section, you learned that:
 - PUT: to update it
 - GET: to read it
 - DELETE: to delete it
--
+
 Express is a simple, minimalistic and lightweight framework for building web servers.
-Build a web server
+
+-Build a web server
 const express = require(‘express’);
 const app = express();
-Creating a course
+-Creating a course
 app.post(‘/api/courses’, (req, res) => {
 // Create the course and return the course object
 resn.send(course);
 });
-// Getting all the courses
+-Getting all the courses
 app.get(‘/api/courses’, (req, res) => {
-// To read query string parameters (?sortBy=name)
+-To read query string parameters (?sortBy=name)
 const sortBy = req.query.sortBy;
 
 // Return the courses 
