@@ -1,5 +1,6 @@
 const express = require('express'); // 3 party module and return function 
 const app = express();
+const Joi = require('joi');
 const port = 3000;
 
 app.use(express.json()); // enable parsing of JSON object in the body of the request
@@ -25,10 +26,19 @@ app.get('/courses/:id' , (req, res) => {
 
 app.post('/api/courses', (req, res) => {
   // validation of input
-  if(!req.body.name || req.body.name.length < 3) // !req.body.name mans req.body.name doesnot exist
-  { res.status(404).send('name is lessthan 3 character')
-    return;// b/c we dont wont the rest of function to be exicuted hear
+  const schema = {
+    name: Joi.string().min(3).required(),
+  };
+  const result = Joi.validate(req.body, schema);
+  if (result.error){
+    res.status(400).send(result.error.details[0].message);
+    return;
   }
+
+  // if(!req.body.name || req.body.name.length < 3) // !req.body.name mans req.body.name doesnot exist
+  // { res.status(404).send('name is lessthan 3 character')
+  //   return;// b/c we dont wont the rest of function to be exicuted hear
+  // }
 
   //read query string parameters
   const course ={
