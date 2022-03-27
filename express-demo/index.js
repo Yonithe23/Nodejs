@@ -67,7 +67,7 @@ app.put('/api/courses/:id' , (req, res) => {
   var course = courses.find(c => c.id === parseInt(req.params.id));
   // if not existing , return the courses
   if(!course) return res.status(404).send("the course id is not available"); // !course id doesnot exist
-  res.send(course);
+  
 
   /*const schema = {
     name: Joi.string().min(3).required(),
