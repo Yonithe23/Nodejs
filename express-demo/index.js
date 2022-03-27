@@ -16,30 +16,41 @@ app.get('/books/:bookId', (req, res) => {
   res.send(req.params.bookId)
 });
 
+app.get('/api/courses' , (req, res) => {
+  res.send(courses);
+});
+
+
 app.get('/api/courses/:id' , (req, res) => {
   // look up the course by id
   var course = courses.find(c => c.id === parseInt(req.params.id));
   // validation input
-  if(!course) res.status(404).send("the course id is not available"); // !course id doesnot exist
+  if(!course) return res.status(404).send("the course id is not available"); // !course id doesnot exist
   res.send(course);
 });
 
 app.post('/api/courses', (req, res) => {
   // validation of input
-  const schema = {
+  /*const schema = {
     name: Joi.string().min(3).required(),
   };
   const result = Joi.validate(req.body, schema);
+
   if (result.error){
     res.status(400).send(result.error.details[0].message);
     return;
-  }
+  }*/
 
-  // if(!req.body.name || req.body.name.length < 3) // !req.body.name mans req.body.name doesnot exist
-  // { res.status(404).send('name is lessthan 3 character')
-  //   return;// b/c we dont wont the rest of function to be exicuted hear
-  // }
-
+  /*if(!req.body.name || req.body.name.length < 3) // !req.body.name mans req.body.name doesnot exist
+  { res.status(404).send('name is lessthan 3 character')
+    return;// b/c we dont wont the rest of function to be exicuted hear
+  }*/
+  const result = validateCourse(req.body);
+  const { error } = validateCourse(req.body); // object disruction is equal to result.error
+  // if invalid
+  
+  if (error) return res.status(400).send(result.error.details[0].message);
+  
   //read query string parameters
   const course ={
   id : courses.length +1 , 
@@ -53,14 +64,56 @@ res.send(course);
 
 app.put('/api/courses/:id' , (req, res) => {
   // look up the courses
+  var course = courses.find(c => c.id === parseInt(req.params.id));
   // if not existing , return the courses
-  // validate the course
+  if(!course) return res.status(404).send("the course id is not available"); // !course id doesnot exist
+  res.send(course);
+
+  /*const schema = {
+    name: Joi.string().min(3).required(),
+  };
+  const result = Joi.validate(req.body, schema);
+
+  if (result.error){
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }*/
+  const result = validateCourse(req.body);
+  const { error } = validateCourse(req.body); // object disruction is equal to result.error
   // if invalid
+  
+  if (error) return res.status(400).send(result.error.details[0].message);
+  
+  
+  // update the course
+  course.name = req.body.name;
   // return the update courses
+  res.send(course);
 })
 
 
+
+function validateCourse(course){
+  const schema = {
+    name: Joi.string().min(3).required(),
+  };
+  return Joi.validate(course, schema);
+
+}
+
+app.delete('/api/courses/:id', (req, res) => {
+// look up the courses
+var course = courses.find(c => c.id === parseInt(req.params.id));
+// if not existing , return the courses
+if(!course) return res.status(404).send("the course id is not available"); // !course id doesnot exist
+
+ // delete 
+ const index = courses.indexOf(course);
+ courses.splice(index, 1);
+ // Return the same course 
+ res.send(course);
+});
+
+
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
-
-
-
