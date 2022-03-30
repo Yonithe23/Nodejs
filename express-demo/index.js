@@ -1,15 +1,27 @@
 const express = require('express'); // 3 party module and return function 
 const app = express();
 const Joi = require('joi');
+const {load , Auth} = require('./logger.js');
+
+const morgan = require('morgan');
+const helmet = require('helmet');
+
 const port = 3000;
+// creat middleware
+app.use(load);
+app.use(Auth);
 
 app.use(express.json()); // enable parsing of JSON object in the body of the request
 const courses = [
   {id : 1 , name : 'Course'},
   {id : 2 ,name : 'Course 2' },
   {id :3 ,name : 'Course3'}];
-
-
+// builtin middleware
+app.use(express.urlencoded( {extended : true} ));
+app.use(express.static('public'));
+// third party middleware
+app.use(morgan('tiny'));
+app.use(helmet());
 app.get('/', (req, res) => res.send('Hello World! every body welcome '));
 
 app.get('/books/:bookId', (req, res) => {
@@ -52,8 +64,8 @@ app.post('/api/courses', (req, res) => {
   if (error) return res.status(400).send(result.error.details[0].message);
   
   //read query string parameters
-  const course ={
-  id : courses.length +1 , 
+  const course = {
+  id : courses.length + 1 , 
   name : req.body.name
   }
 courses.push(course);
